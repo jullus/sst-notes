@@ -9,6 +9,7 @@ export function ApiStack({stack}: StackContext) {
             function: {
                 bind: [table],
             },
+            authorizer: 'iam',
         },
         routes: {
             "GET /notes": "packages/functions/src/list.main",

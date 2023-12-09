@@ -15,10 +15,14 @@ export default function handler(
                 error: error instanceof Error ? error.message : String(error),
             });
         }
-// Return HTTP response
+
         return {
             body,
             statusCode,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true,
+            },
         };
     };
 }

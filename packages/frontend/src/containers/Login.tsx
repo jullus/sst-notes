@@ -6,6 +6,7 @@ import {Auth} from 'aws-amplify';
 import {useAppContext} from '../lib/contextLib.ts';
 import {useNavigate} from 'react-router-dom';
 import LoaderButton from '../components/LoaderButton.tsx';
+import {onError} from '../lib/errorLib.ts';
 
 export default function Login() {
 
@@ -30,13 +31,7 @@ export default function Login() {
             userHasAuthenticated(true);
             nav('/');
         } catch (error) {
-// Prints the full error
-            console.error(error);
-            if (error instanceof Error) {
-                alert(error.message);
-            } else {
-                alert(String(error));
-            }
+            onError(error);
             setIsLoading(false);
         }
     }

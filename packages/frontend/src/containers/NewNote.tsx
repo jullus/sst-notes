@@ -6,6 +6,7 @@ import LoaderButton from '../components/LoaderButton.tsx';
 import {NoteType} from '../types/note.ts';
 import {API} from 'aws-amplify';
 import {onError} from '../lib/errorLib.ts';
+import {s3Upload} from '../lib/awsLib.ts';
 
 export default function NewNote() {
     const file = useRef<null | File>(null);
@@ -38,8 +39,12 @@ export default function NewNote() {
 
         setIsLoading(true);
 
+        const attachment = file.current
+            ? await s3Upload(file.current)
+            : undefined;
+
         try {
-            await createNote({ content });
+            await createNote({ content, attachment });
             nav("/");
         } catch (e) {
             onError(e);

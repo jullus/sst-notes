@@ -3,6 +3,9 @@ import {useNavigate} from 'react-router-dom';
 import config from '../config';
 import Form from 'react-bootstrap/Form';
 import LoaderButton from '../components/LoaderButton.tsx';
+import {NoteType} from '../types/note.ts';
+import {API} from 'aws-amplify';
+import {onError} from '../lib/errorLib.ts';
 
 export default function NewNote() {
     const file = useRef<null | File>(null);
@@ -19,6 +22,12 @@ export default function NewNote() {
         file.current = event.currentTarget.files[0];
     }
 
+    function createNote(note: NoteType) {
+        return API.post('notes', '/notes', {
+            body: note
+        });
+    }
+
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -28,6 +37,14 @@ export default function NewNote() {
         }
 
         setIsLoading(true);
+
+        try {
+            await createNote({ content });
+            nav("/");
+        } catch (e) {
+            onError(e);
+            setIsLoading(false);
+        }
     }
 
     return (
